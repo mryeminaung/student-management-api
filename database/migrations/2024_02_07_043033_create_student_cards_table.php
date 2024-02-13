@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('student_cards', function (Blueprint $table) {
             $table->id('student_card_id');
             $table->uuid('card_number')->unique();
+
             $table->timestamps();
         });
     }

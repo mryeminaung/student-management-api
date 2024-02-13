@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\student;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StudentCreateRequest;
 use App\Models\Student;
+use App\Models\StudentCard;
 use Illuminate\Http\Request;
 
 class StudentApiController extends Controller
@@ -14,16 +14,30 @@ class StudentApiController extends Controller
      */
     public function index()
     {
-        return "index function";
+        $students = Student::all();
+        return response()->json($students);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StudentCreateRequest $request)
+    public function store(Request $request)
     {
-        $student = Student::create($request->validate());
+        // $student = Student::create($request->validate());
+        $studentCard = StudentCard::create([
+            'card_number' => fake()->uuid()
+        ]);
+
+        $student = Student::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'date_of_birth' => $request->date_of_birth,
+            'student_type_id' => $request->student_type_id,
+            'student_card_id' => $studentCard->student_card_id
+        ]);
+
         dd($student);
+        // dd($studentCard['card_number']);
     }
 
     /**
@@ -31,7 +45,8 @@ class StudentApiController extends Controller
      */
     public function show(string $id)
     {
-        return "show function";
+        $student = Student::find($id);
+        return response()->json($student);
     }
 
     /**
@@ -39,7 +54,15 @@ class StudentApiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return "update function";
+        $student = Student::find($id);
+        $student->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'date_of_birth' => $request->date_of_birth,
+            'student_type_id' => $request->student_type_id
+        ]);
+
+        return response()->json($student);
     }
 
     /**
@@ -47,6 +70,12 @@ class StudentApiController extends Controller
      */
     public function destroy(string $id)
     {
-        return "destroy function";
+        $student = Student::find($id);
+        $studentCard = StudentCard::find($id);
+
+        $student->delete();
+        $studentCard->delete();
+
+        return response()->json($studentCard);
     }
 }

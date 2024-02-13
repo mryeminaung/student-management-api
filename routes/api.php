@@ -23,6 +23,6 @@ Route::get('/students', [StudentApiController::class, 'index']);
 Route::get('/students/{student}', [StudentApiController::class, 'show']);
 
 Route::post('/students', [StudentApiController::class, 'store']);
-Route::put('/students/{student}', [StudentApiController::class, 'update']);
+Route::patch('/students/{id}', [StudentApiController::class, 'update']);
 
-Route::delete('/students/{student}', [StudentApiController::class, 'destroy']);
+Route::delete('/students/{id}', [StudentApiController::class, 'destroy']);

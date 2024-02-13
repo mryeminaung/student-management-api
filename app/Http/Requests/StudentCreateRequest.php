@@ -26,7 +26,7 @@ class StudentCreateRequest extends FormRequest
             'email' => 'required|unique:students',
             'date_of_birth' => 'required',
             'student_type_id' => 'required',
-            'student_card_id' => 'required'
+            // 'student_card_id' => 'required'
         ];
     }
 }
