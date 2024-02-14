@@ -5,6 +5,7 @@ namespace App\Http\Controllers\student;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Models\StudentCard;
+use App\Models\StudentType;
 use Illuminate\Http\Request;
 
 class StudentApiController extends Controller
@@ -14,8 +15,12 @@ class StudentApiController extends Controller
      */
     public function index()
     {
-        $students = Student::all();
-        return response()->json($students);
+        $students = Student::paginate(2);
+        return response()->json([
+            'success' => true,
+            'message' => 'Action is OK',
+            "data" => $students
+        ]);
     }
 
     /**
@@ -24,20 +29,31 @@ class StudentApiController extends Controller
     public function store(Request $request)
     {
         // $student = Student::create($request->validate());
-        $studentCard = StudentCard::create([
-            'card_number' => fake()->uuid()
-        ]);
+        $student = StudentType::find($request->student_type_id);
+        if ($student) {
 
-        $student = Student::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'date_of_birth' => $request->date_of_birth,
-            'student_type_id' => $request->student_type_id,
-            'student_card_id' => $studentCard->student_card_id
-        ]);
+            $studentCard = StudentCard::create([
+                'card_number' => fake()->uuid()
+            ]);
 
-        dd($student);
-        // dd($studentCard['card_number']);
+            $student = Student::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'date_of_birth' => $request->date_of_birth,
+                'student_type_id' => $request->student_type_id,
+                'student_card_id' => $studentCard->student_card_id
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Created Successfully',
+                "data" => $student
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Student type is invalid type',
+            "data" => $student
+        ]);
     }
 
     /**
@@ -46,7 +62,19 @@ class StudentApiController extends Controller
     public function show(string $id)
     {
         $student = Student::find($id);
-        return response()->json($student);
+        if ($student) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Retrieved Successfully',
+                "data" => $student
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student is not found.',
+                "data" => $student
+            ]);
+        }
     }
 
     /**
@@ -55,14 +83,26 @@ class StudentApiController extends Controller
     public function update(Request $request, string $id)
     {
         $student = Student::find($id);
-        $student->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'date_of_birth' => $request->date_of_birth,
-            'student_type_id' => $request->student_type_id
-        ]);
+        if ($student) {
+            $student->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'date_of_birth' => $request->date_of_birth,
+                'student_type_id' => $request->student_type_id
+            ]);
 
-        return response()->json($student);
+            return response()->json([
+                'success' => true,
+                'message' => 'Updated Successfully',
+                "data" => $student
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student is not found.',
+                "data" => $student
+            ]);
+        }
     }
 
     /**
@@ -73,9 +113,20 @@ class StudentApiController extends Controller
         $student = Student::find($id);
         $studentCard = StudentCard::find($id);
 
-        $student->delete();
-        $studentCard->delete();
+        if ($student && $studentCard) {
+            $student->delete();
+            $studentCard->delete();
 
-        return response()->json($studentCard);
+            return response()->json([
+                'success' => true,
+                'message' => 'Deleted Successfully',
+                "data" => $student
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Student is not found.',
+            "data" => $student
+        ]);
     }
 }
