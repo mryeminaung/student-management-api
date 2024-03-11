@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Undergraduate," "Graduate," "International," "Exchange," "Part-time," "Full-time," etc.
         Schema::create('student_types', function (Blueprint $table) {
-            $table->id('student_type_id');
+            $table->id();
             $table->enum('desc', ['graduate', 'undergraduate', 'international', 'exchange', 'part-time', 'full-time'])->default('undergraduate');
             $table->timestamps();
         });

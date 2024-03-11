@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class StudentCardFactory extends Factory
     public function definition(): array
     {
         return [
-            'card_number' => fake()->uuid(),
+            'card_number' => $this->faker->uuid(),
         ];
     }
 }

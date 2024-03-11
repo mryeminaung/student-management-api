@@ -15,10 +15,11 @@ class StudentApiController extends Controller
      */
     public function index()
     {
-        $students = Student::paginate(2);
+        $students = Student::all();
+
         return response()->json([
             'success' => true,
-            'message' => 'Action is OK',
+            'message' => 'Retrieved',
             "data" => $students
         ]);
     }
@@ -30,6 +31,7 @@ class StudentApiController extends Controller
     {
         // $student = Student::create($request->validate());
         $student = StudentType::find($request->student_type_id);
+
         if ($student) {
 
             $studentCard = StudentCard::create([
@@ -59,73 +61,70 @@ class StudentApiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Student $student)
     {
-        $student = Student::find($id);
         if ($student) {
             return response()->json([
                 'success' => true,
                 'message' => 'Retrieved Successfully',
                 "data" => $student
             ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Student is not found.',
-                "data" => $student
-            ]);
         }
+        return response()->json([
+            'success' => false,
+            'message' => 'Student is not found.',
+            "data" => $student
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Student $student)
     {
-        $student = Student::find($id);
-        if ($student) {
-            $student->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'date_of_birth' => $request->date_of_birth,
-                'student_type_id' => $request->student_type_id
-            ]);
+        $studentType = StudentType::find($request->student_type_id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Updated Successfully',
-                "data" => $student
-            ]);
-        } else {
+        if (!$studentType) {
             return response()->json([
                 'success' => false,
-                'message' => 'Student is not found.',
-                "data" => $student
+                'message' => 'Student type id is invalid type',
+                'data' => $studentType,
             ]);
+        } else {
+            if ($student) {
+                $student->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'date_of_birth' => $request->date_of_birth,
+                    'student_type_id' => $request->student_type_id
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Updated Successfully',
+                    "data" => $student
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Student is not found.',
+                    "data" => $student
+                ]);
+            }
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Student $student)
     {
-        $student = Student::find($id);
-        $studentCard = StudentCard::find($id);
-
-        if ($student && $studentCard) {
-            $student->delete();
-            $studentCard->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Deleted Successfully',
-                "data" => $student
-            ]);
-        }
+        // $student->delete();
+        // $student->card->delete();
+        dd($student->type);
         return response()->json([
-            'success' => false,
-            'message' => 'Student is not found.',
+            'success' => true,
+            'message' => 'Deleted Successfully',
             "data" => $student
         ]);
     }

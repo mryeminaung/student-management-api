@@ -12,14 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->id('student_id');
+            $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->date('date_of_birth');
-            $table->unsignedBigInteger('student_type_id');
-            $table->unsignedBigInteger('student_card_id');
-            $table->foreign('student_type_id')->references('student_type_id')->on('student_types')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('student_card_id')->references('student_card_id')->on('student_cards')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('student_type_id');
+            $table->foreignId('student_card_id');
+
+            // $table->foreign('student_type_id')->references('id')->on('student_types');
+
+            // $table->foreign('student_card_id')->references('id')->on('student_cards')->onUpdate('cascade')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

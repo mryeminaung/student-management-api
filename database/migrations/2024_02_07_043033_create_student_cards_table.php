@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('student_cards', function (Blueprint $table) {
-            $table->id('student_card_id');
+            $table->id();
             $table->uuid('card_number')->unique();
-
+            $table->foreignId('student_id');
             $table->timestamps();
         });
     }

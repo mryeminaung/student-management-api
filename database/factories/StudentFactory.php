@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\StudentCard;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class StudentFactory extends Factory
 {
-    private static $cardCounter = 1;
     /**
      * Define the model's default state.
      *
@@ -18,20 +18,11 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->userName(),
-            'email' => fake()->email(),
-            'date_of_birth' => fake()->date(),
-            'student_card_id' => $this->generateCardID(),            'student_type_id' => rand(1, 6),
+            'name' => $this->faker->userName,
+            'email' => $this->faker->email,
+            'date_of_birth' => $this->faker->date,
+            'student_card_id' => StudentCard::factory(),
+            'student_type_id' => rand(1, 6)
         ];
-    }
-
-    private function generateCardID()
-    {
-        if (self::$cardCounter > 10) {
-            self::$cardCounter = 1; // Reset counter if it exceeds the number of available cards
-        }
-        $cardId = self::$cardCounter;
-        self::$cardCounter++;
-        return $cardId;
     }
 }

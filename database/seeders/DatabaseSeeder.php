@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Student;
 use App\Models\StudentCard;
+use App\Models\StudentType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +17,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // \App\Models\User::factory(10)->create();
+
+        // StudentCard::truncate();
+        StudentType::truncate();
+        Student::truncate();
+
+        $types = ['graduate', 'undergraduate', 'international', 'exchange', 'part-time', 'full-time'];
+
+        foreach ($types as $type) {
+            StudentType::create([
+                'desc' => $type
+            ]);
+        }
+
+        Student::factory()->count(15)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

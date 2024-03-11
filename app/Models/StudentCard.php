@@ -9,6 +9,10 @@ class StudentCard extends Model
 {
     use HasFactory;
     protected $table = 'student_cards';
-    protected $primaryKey = 'student_card_id';
-    protected $fillable = ['card_number'];
+    protected $fillable = ['card_number', 'student_id'];
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
 }

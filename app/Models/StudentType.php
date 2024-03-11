@@ -9,6 +9,10 @@ class StudentType extends Model
 {
     use HasFactory;
     protected $table = 'student_types';
-    protected $primaryKey = 'student_type_id';
     protected $fillable = ['desc'];
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
 }

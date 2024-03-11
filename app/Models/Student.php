@@ -9,7 +9,6 @@ class Student extends Model
 {
     use HasFactory;
     protected $table = 'students';
-    protected $primaryKey = 'student_id';
     protected $fillable = [
         'name',
         'email',
@@ -17,4 +16,14 @@ class Student extends Model
         'student_type_id',
         'student_card_id'
     ];
+
+    public function type()
+    {
+        return $this->belongsTo(StudentType::class, 'student_type_id');
+    }
+
+    public function card()
+    {
+        return $this->hasOne(StudentCard::class, 'student_card_id');
+    }
 }
