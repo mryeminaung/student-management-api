@@ -19,11 +19,11 @@ class Student extends Model
 
     public function type()
     {
-        return $this->belongsTo(StudentType::class, 'student_type_id');
+        return $this->belongsTo(StudentType::class, 'id');
     }
 
     public function card()
     {
-        return $this->hasOne(StudentCard::class, 'student_card_id');
+        return $this->hasOne(StudentCard::class, 'id');
     }
 }

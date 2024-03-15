@@ -16,12 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->date('date_of_birth');
-            $table->foreignId('student_type_id');
-            $table->foreignId('student_card_id');
-
-            // $table->foreign('student_type_id')->references('id')->on('student_types');
-
-            // $table->foreign('student_card_id')->references('id')->on('student_cards')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('student_type_id');
+            $table->unsignedBigInteger('student_card_id');
+            $table->foreign('student_type_id')->references('id')->on('student_types');
+            $table->foreign('student_card_id')->references('id')->on('student_cards')->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
         });

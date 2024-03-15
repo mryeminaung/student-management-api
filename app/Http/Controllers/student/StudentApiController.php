@@ -15,12 +15,10 @@ class StudentApiController extends Controller
      */
     public function index()
     {
-        $students = Student::all();
-
         return response()->json([
             'success' => true,
-            'message' => 'Retrieved',
-            "data" => $students
+            'message' => "Resource created successfully.",
+            "data" => Student::all()
         ]);
     }
 
@@ -29,10 +27,9 @@ class StudentApiController extends Controller
      */
     public function store(Request $request)
     {
-        // $student = Student::create($request->validate());
-        $student = StudentType::find($request->student_type_id);
+        $isValid = StudentType::findOrFail($request->student_type_id);
 
-        if ($student) {
+        if ($isValid) {
 
             $studentCard = StudentCard::create([
                 'card_number' => fake()->uuid()
@@ -43,18 +40,17 @@ class StudentApiController extends Controller
                 'email' => $request->email,
                 'date_of_birth' => $request->date_of_birth,
                 'student_type_id' => $request->student_type_id,
-                'student_card_id' => $studentCard->student_card_id
+                'student_card_id' => $studentCard->id
             ]);
             return response()->json([
                 'success' => true,
-                'message' => 'Created Successfully',
+                'message' => 'Resource created successfully.',
                 "data" => $student
             ]);
         }
         return response()->json([
-            'success' => false,
-            'message' => 'Student type is invalid type',
-            "data" => $student
+            'error' => true,
+            'message' => 'Failed to create resource. Please check your input and try again.',
         ]);
     }
 
@@ -66,13 +62,13 @@ class StudentApiController extends Controller
         if ($student) {
             return response()->json([
                 'success' => true,
-                'message' => 'Retrieved Successfully',
+                'message' => "Resource retrieved successfully.",
                 "data" => $student
             ]);
         }
         return response()->json([
-            'success' => false,
-            'message' => 'Student is not found.',
+            'error' => true,
+            'message' => 'Failed to retrieve resource. Please try again later..',
             "data" => $student
         ]);
     }
@@ -82,35 +78,33 @@ class StudentApiController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        $studentType = StudentType::find($request->student_type_id);
+        $isValid = StudentType::findOrFail($request->student_type_id);
 
-        if (!$studentType) {
+        if ($isValid) {
             return response()->json([
-                'success' => false,
-                'message' => 'Student type id is invalid type',
-                'data' => $studentType,
+                'error' => true,
+                'message' => 'Failed to update resource. Please ensure the data is valid and try again.',
+            ]);
+        }
+
+        if ($student) {
+            $student->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'date_of_birth' => $request->date_of_birth,
+                'student_type_id' => $request->student_type_id
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Resource updated successfully.',
+                "data" => $student
             ]);
         } else {
-            if ($student) {
-                $student->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'date_of_birth' => $request->date_of_birth,
-                    'student_type_id' => $request->student_type_id
-                ]);
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Updated Successfully',
-                    "data" => $student
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Student is not found.',
-                    "data" => $student
-                ]);
-            }
+            return response()->json([
+                'error' => true,
+                'message' => 'Failed to update resource. Please ensure the data is valid and try again.',
+            ]);
         }
     }
 
@@ -119,13 +113,19 @@ class StudentApiController extends Controller
      */
     public function destroy(Student $student)
     {
-        // $student->delete();
-        // $student->card->delete();
-        dd($student->type);
+        if ($student) {
+            $student->card->delete();
+            $student->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Resource deleted successfully.',
+                "data" => $student
+            ]);
+        }
         return response()->json([
-            'success' => true,
-            'message' => 'Deleted Successfully',
-            "data" => $student
+            'error' => true,
+            'message' => 'Failed to delete resource. Please try again later.',
         ]);
     }
 }

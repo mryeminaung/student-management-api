@@ -18,10 +18,6 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // StudentCard::truncate();
-        StudentType::truncate();
-        Student::truncate();
-
         $types = ['graduate', 'undergraduate', 'international', 'exchange', 'part-time', 'full-time'];
 
         foreach ($types as $type) {
@@ -30,7 +26,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        Student::factory()->count(15)->create();
+        Student::factory()->count(5)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

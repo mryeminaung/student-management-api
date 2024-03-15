@@ -13,6 +13,6 @@ class StudentType extends Model
 
     public function students()
     {
-        return $this->hasMany(Student::class);
+        return $this->hasMany(Student::class, 'student_type_id');
     }
 }

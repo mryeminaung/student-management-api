@@ -18,9 +18,9 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->userName,
-            'email' => $this->faker->email,
-            'date_of_birth' => $this->faker->date,
+            'name' => $this->faker->userName(),
+            'email' => $this->faker->email(),
+            'date_of_birth' => $this->faker->date(),
             'student_card_id' => StudentCard::factory(),
             'student_type_id' => rand(1, 6)
         ];
